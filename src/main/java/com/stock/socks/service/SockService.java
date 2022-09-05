@@ -7,12 +7,13 @@ import com.stock.socks.exception.IncorrectQuantityData;
 import com.stock.socks.exception.SockNotFound;
 import com.stock.socks.repository.SockRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class SockService {
 
-    private SockRepository sockRepository;
+    private final SockRepository sockRepository;
 
     public SockService(SockRepository sockRepository) {
         this.sockRepository = sockRepository;
@@ -25,8 +26,7 @@ public class SockService {
 
     public int findSockByParameters(String color, String operation, int cottonPart) {
 
-
-        if(operation.equals("equal")) {
+        if (operation.equals("equal")) {
             return findSumOfSocksQuantity(sockRepository.findAllByColorAndCottonPartEquals(color, cottonPart));
 
         } else if (operation.equals("lessThan")) {
@@ -36,13 +36,14 @@ public class SockService {
             return findSumOfSocksQuantity(sockRepository.findAllByColorAndCottonPartGreaterThan(color, cottonPart));
 
         } else {
-            throw new IncorrectOperation("Неверная операция с данными");
+            throw new IncorrectOperation();
         }
     }
 
     public int findSumOfSocksQuantity(List<Sock> socks) {
+
         int sum = 0;
-        for (Sock sock: socks) {
+        for (Sock sock : socks) {
             sum += sock.getQuantity();
         }
         return sum;
@@ -51,9 +52,9 @@ public class SockService {
     public void receiptOfSock(Sock sock) {
 
         if (sock.getCottonPart() > 100 || sock.getCottonPart() < 0) {
-            throw new IncorrectCottonPartData("Процентное соотношения хлопка должно быть в интервале от 0 до 100");
+            throw new IncorrectCottonPartData();
         }
-        if(sock.getQuantity() <= 0) {
+        if (sock.getQuantity() <= 0) {
             throw new IncorrectQuantityData("Количество поступивших пар не может иметь отрицательное значение");
         }
 
@@ -69,7 +70,9 @@ public class SockService {
         sockRepository.findSockByColorAndCottonPart(sock.getColor(), sock.getCottonPart())
                 .ifPresentOrElse(
                         s -> decreaseNumberOfSock(s, sock.getQuantity()),
-                        () -> { throw new SockNotFound("Запрошенных носков нет на складе"); }
+                        () -> {
+                            throw new SockNotFound();
+                        }
                 );
     }
 
@@ -83,7 +86,7 @@ public class SockService {
     public void decreaseNumberOfSock(Sock sock, int quantity) {
 
         int newQuantity = sock.getQuantity() - quantity;
-        if(newQuantity >= 0) {
+        if (newQuantity >= 0) {
             sock.setQuantity(newQuantity);
             sockRepository.save(sock);
         } else {

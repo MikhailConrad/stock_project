@@ -1,8 +1,5 @@
 package com.stock.socks.entity;
 
-import com.stock.socks.exception.IncorrectQuantityData;
-import com.stock.socks.exception.StockIncorrectData;
-
 import javax.persistence.*;
 
 @Entity

@@ -1,4 +1,4 @@
-package com.stock.socks.exception;
+package com.stock.socks.entity;
 
 public class StockIncorrectData {
 

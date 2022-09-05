@@ -2,10 +2,9 @@ package com.stock.socks.exception;
 
 public class IncorrectOperation extends RuntimeException{
 
-    public IncorrectOperation() {
-    }
+    private final static String EXCEPTION_MESSAGE = "Неверная операция с данными";
 
-    public IncorrectOperation(String message) {
-        super(message);
+    public IncorrectOperation() {
+        super(EXCEPTION_MESSAGE);
     }
 }
