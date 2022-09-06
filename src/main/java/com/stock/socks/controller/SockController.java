@@ -40,36 +40,4 @@ public class SockController {
         sockService.issuanceOfSock(sock);
         return new ResponseEntity<>("Партия носков была отпущена со склада", HttpStatus.OK);
     }
-
-    @ExceptionHandler(IncorrectOperation.class)
-    public ResponseEntity<StockIncorrectData> incorrectOperation(IncorrectOperation exception) {
-
-        StockIncorrectData stockIncorrectData = new StockIncorrectData(exception.getMessage());
-        return new ResponseEntity<>(stockIncorrectData, HttpStatus.valueOf(400));
-    }
-
-    @ExceptionHandler(IncorrectQuantityData.class)
-    public ResponseEntity<StockIncorrectData> incorrectQuantityData(IncorrectQuantityData exception) {
-        StockIncorrectData stockIncorrectData = new StockIncorrectData(exception.getMessage());
-        return new ResponseEntity<>(stockIncorrectData, HttpStatus.valueOf(400));
-    }
-
-    @ExceptionHandler(IncorrectCottonPartData.class)
-    public ResponseEntity<StockIncorrectData> incorrectCottonPartData(IncorrectCottonPartData exception) {
-        StockIncorrectData stockIncorrectData = new StockIncorrectData(exception.getMessage());
-        return new ResponseEntity<>(stockIncorrectData, HttpStatus.valueOf(400));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<StockIncorrectData> sockNotFound(SockNotFound exception) {
-
-        StockIncorrectData stockIncorrectData = new StockIncorrectData(exception.getMessage());
-        return new ResponseEntity<>(stockIncorrectData, HttpStatus.valueOf(400));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Exception> otherException(Exception exception) {
-
-        return new ResponseEntity<>(exception, HttpStatus.valueOf(500));
-    }
 }
