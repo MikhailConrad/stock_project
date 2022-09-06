@@ -1,5 +1,6 @@
 package com.stock.socks.service;
 
+import com.stock.socks.entity.Operation;
 import com.stock.socks.entity.Sock;
 import com.stock.socks.exception.IncorrectCottonPartData;
 import com.stock.socks.exception.IncorrectOperation;
@@ -26,13 +27,13 @@ public class SockService {
 
     public int findSockByParameters(String color, String operation, int cottonPart) {
 
-        if (operation.equals("equal")) {
+        if (operation.equals(Operation.EQUAL.getOperationName())) {
             return findSumOfSocksQuantity(sockRepository.findAllByColorAndCottonPartEquals(color, cottonPart));
 
-        } else if (operation.equals("lessThan")) {
+        } else if (operation.equals(Operation.LESS_THAN.getOperationName())) {
             return findSumOfSocksQuantity(sockRepository.findAllByColorAndCottonPartLessThan(color, cottonPart));
 
-        } else if (operation.equals("moreThan")) {
+        } else if (operation.equals(Operation.MORE_THAN.getOperationName())) {
             return findSumOfSocksQuantity(sockRepository.findAllByColorAndCottonPartGreaterThan(color, cottonPart));
 
         } else {
