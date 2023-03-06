@@ -1,6 +1,6 @@
 package com.stock.socks.repository;
 
-import com.stock.socks.entity.Sock;
+import com.stock.socks.model.entity.Sock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

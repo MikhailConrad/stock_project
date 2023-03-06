@@ -1,12 +1,14 @@
 package com.stock.socks.service;
 
-import com.stock.socks.entity.Operation;
-import com.stock.socks.entity.Sock;
+import com.stock.socks.model.dto.SockRequest;
+import com.stock.socks.model.entity.Operation;
+import com.stock.socks.model.entity.Sock;
 import com.stock.socks.exception.IncorrectCottonPartData;
 import com.stock.socks.exception.IncorrectOperation;
 import com.stock.socks.exception.IncorrectQuantityData;
 import com.stock.socks.exception.SockNotFound;
 import com.stock.socks.repository.SockRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +17,9 @@ import java.util.List;
 public class SockService {
 
     private final SockRepository sockRepository;
-
+    @Autowired
     public SockService(SockRepository sockRepository) {
         this.sockRepository = sockRepository;
-    }
-
-    public List<Sock> getAllSocks() {
-
-        return sockRepository.findAll();
     }
 
     public int findSockByParameters(String color, String operation, int cottonPart) {
@@ -50,27 +47,27 @@ public class SockService {
         return sum;
     }
 
-    public void receiptOfSock(Sock sock) {
+    public void receiptOfSock(SockRequest request) {
 
-        if (sock.getCottonPart() > 100 || sock.getCottonPart() < 0) {
+        if (request.getCottonPart() > 100 || request.getCottonPart() < 0) {
             throw new IncorrectCottonPartData();
         }
-        if (sock.getQuantity() <= 0) {
+        if (request.getQuantity() <= 0) {
             throw new IncorrectQuantityData("Количество поступивших пар не может иметь отрицательное значение");
         }
 
-        sockRepository.findSockByColorAndCottonPart(sock.getColor(), sock.getCottonPart())
+        sockRepository.findSockByColorAndCottonPart(request.getColor(), request.getCottonPart())
                 .ifPresentOrElse(
-                        s -> increaseNumberOfSock(s, sock.getQuantity()),
-                        () -> sockRepository.save(sock)
+                        s -> increaseNumberOfSock(s, request.getQuantity()),
+                        () -> sockRepository.save(mapToSock(request))
                 );
     }
 
-    public void issuanceOfSock(Sock sock) {
+    public void issuanceOfSock(SockRequest request) {
 
-        sockRepository.findSockByColorAndCottonPart(sock.getColor(), sock.getCottonPart())
+        sockRepository.findSockByColorAndCottonPart(request.getColor(), request.getCottonPart())
                 .ifPresentOrElse(
-                        s -> decreaseNumberOfSock(s, sock.getQuantity()),
+                        s -> decreaseNumberOfSock(s, request.getQuantity()),
                         () -> {
                             throw new SockNotFound();
                         }
@@ -93,5 +90,13 @@ public class SockService {
         } else {
             throw new IncorrectQuantityData("Недостаточно пар на складе");
         }
+    }
+
+    private Sock mapToSock(SockRequest sock) {
+        return new Sock(
+                sock.getColor(),
+                sock.getCottonPart(),
+                sock.getQuantity()
+        );
     }
 }

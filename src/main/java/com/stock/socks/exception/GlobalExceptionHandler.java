@@ -1,6 +1,6 @@
 package com.stock.socks.exception;
 
-import com.stock.socks.entity.StockIncorrectData;
+import com.stock.socks.model.entity.StockIncorrectData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
